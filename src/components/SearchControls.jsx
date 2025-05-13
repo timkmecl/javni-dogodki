@@ -1,6 +1,8 @@
 import React from 'react';
 
-const SearchControls = ({ searchQuery, setSearchQuery, filterBy, setFilterBy, locationFilter, setLocationFilter, dateFilter, setDateFilter }) => {
+const SearchControls = ({ searchQuery, setSearchQuery, filterBy, setFilterBy, locationFilter, setLocationFilter, dateFilter, setDateFilter, citySuggestions, regionSuggestions }) => {
+  const suggestions = filterBy === 'city' ? citySuggestions : filterBy === 'region' ? regionSuggestions : [];
+
   return (
     <div className="controls-container">
       <div className="search-interface">
@@ -47,8 +49,14 @@ const SearchControls = ({ searchQuery, setSearchQuery, filterBy, setFilterBy, lo
           placeholder="Filtriraj po lokaciji..."
           value={locationFilter}
           onChange={(e) => setLocationFilter(e.target.value)}
+          list="location-suggestions"
           disabled={filterBy === 'all'}
         />
+        <datalist id="location-suggestions">
+          {suggestions.map((suggestion, index) => (
+            <option key={index} value={suggestion} />
+          ))}
+        </datalist>
         <select
           className="date-filter-select"
           value={dateFilter}

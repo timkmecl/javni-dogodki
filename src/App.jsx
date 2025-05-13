@@ -162,6 +162,9 @@ function App() {
     return Math.ceil(diffTime / (1000 * 60 * 60 * 24)); // Convert milliseconds to days
   };
 
+  const uniqueCities = [...new Set(events.map((event) => event.city.toUpperCase()).filter((city) => city !== 'N/A'))];
+  const uniqueRegions = [...new Set(events.map((event) => event.region.toUpperCase()).filter((region) => region !== 'N/A'))];
+
   return (
     <div className="App">
       <Header />
@@ -175,6 +178,8 @@ function App() {
           setLocationFilter={setLocationFilter}
           dateFilter={dateFilter}
           setDateFilter={setDateFilter}
+          citySuggestions={uniqueCities} // Pass city suggestions
+          regionSuggestions={uniqueRegions} // Pass region suggestions
         />
         {loading ? (
           <div className="loading-container">

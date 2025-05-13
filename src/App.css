@@ -1,0 +1,350 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  /* padding: 2rem; */
+  text-align: center;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+/* General App Styling */
+.App {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  color: #333;
+  background-color: #f4f7f6;
+  min-height: 100vh;
+  padding-bottom: 20px;
+}
+
+.App-header {
+  background-color: #ffffff;
+  padding: 20px 40px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.App-header h1 {
+  margin: 0;
+  font-size: 2.5em;
+  color: #2c3e50;
+}
+
+.App-main {
+  padding: 0 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Controls Container */
+.controls-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background-color: #ffffff;
+  padding: 25px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  margin-bottom: 30px;
+}
+
+/* Search and Filter Interfaces */
+.search-interface,
+.filter-interface {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  align-items: center;
+}
+
+.search-interface input[type='text'],
+.filter-interface input[type='text'],
+.filter-interface select {
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 1em;
+  flex-grow: 1;
+  min-width: 200px; /* Ensure inputs don't get too small */
+}
+
+.search-interface input[type='text']:focus,
+.filter-interface input[type='text']:focus,
+.filter-interface select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.filter-group {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 8px;
+  background-color: #f9f9f9;
+  border-radius: 6px;
+}
+
+.filter-group label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.filter-group input[type='radio'] {
+  margin-right: 5px;
+}
+
+.filter-group label:hover {
+  background-color: #e9ecef;
+}
+
+.filter-interface .location-filter-input {
+ flex-basis: 250px; /* Specific width for location input */
+}
+.filter-interface .date-filter-select {
+  flex-basis: 200px; /* Specific width for date select */
+}
+
+
+/* Events List Styling */
+.events-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 25px;
+  margin-top: 20px;
+}
+
+.event-card {
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  display: flex; /* Added */
+  flex-direction: column; /* Added */
+}
+
+.event-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+.event-card h2 {
+  margin-top: 0;
+  font-size: 1.4em;
+  color: #34495e;
+  margin-bottom: 12px; /* Increased bottom margin */
+}
+
+/* New styles for event card hierarchy */
+.event-date-time-status {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Added to center content */
+  gap: 8px; /* Spacing between date, time, and status */
+  font-size: 0.9em;
+  color: #555;
+  margin-bottom: 8px;
+}
+
+.event-date,
+.event-time {
+  font-weight: 500;
+}
+
+.event-status {
+  font-size: 0.85em;
+  font-weight: bold;
+  padding: 3px 8px;
+  border-radius: 4px;
+  color: white;
+  /* Background color is set inline based on daysUntil */
+}
+
+.event-location-info {
+  font-size: 1em;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.event-city-region {
+  font-weight: 600;
+}
+
+.event-location-link {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.event-location-link:hover {
+  text-decoration: underline;
+}
+
+.event-organizer {
+  font-size: 0.9em;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.event-organizer strong {
+  color: #444;
+}
+
+.event-extra-details {
+  font-size: 0.9em;
+  color: #777;
+  margin-bottom: 12px;
+  white-space: pre-line; /* Preserve line breaks in extra info */
+}
+
+.event-footer {
+  margin-top: auto; /* Pushes footer to the bottom of the card */
+  padding-top: 10px; /* Adds some space above the footer links */
+  border-top: 1px solid #eee; /* Optional: adds a separator line */
+  display: flex;
+  justify-content: flex-end; /* Aligns link to the right */
+}
+
+.details-link {
+  display: inline-block;
+  padding: 8px 15px;
+  background-color: #007bff;
+  color: white !important;
+  border-radius: 5px;
+  font-size: 0.9em;
+  text-align: center;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.details-link:hover {
+  background-color: #0056b3;
+  text-decoration: none;
+}
+
+.event-card p {
+  margin: 8px 0;
+  font-size: 0.95em;
+  line-height: 1.6;
+  color: #555;
+}
+
+.event-card strong {
+  color: #2c3e50;
+}
+
+.event-card a {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.event-card a:hover {
+  text-decoration: underline;
+  color: #0056b3;
+}
+
+.event-card .map-link {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 8px 12px;
+  background-color: #28a745;
+  color: white;
+  border-radius: 5px;
+  font-size: 0.9em;
+  text-align: center;
+}
+
+.event-card .map-link:hover {
+  background-color: #218838;
+  text-decoration: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .App {
+    margin: 0;
+    padding: 0;
+    padding-bottom: 20px;
+  }
+
+  .App-header {
+    padding: 15px 20px;
+  }
+  .App-header h1 {
+    font-size: 2em;
+  }
+  .App-main {
+    padding: 0 10px;
+  }
+  .controls-container {
+    padding: 20px;
+  }
+  .search-interface,
+  .filter-interface {
+    flex-direction: column;
+    align-items: stretch; /* Make inputs full width on small screens */
+  }
+  .filter-interface .location-filter-input,
+  .filter-interface .date-filter-select {
+    flex-basis: auto; /* Reset basis for stacked layout */
+    width: 100%;
+  }
+  .filter-group {
+    justify-content: space-around;
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .event-card {
+    padding: 15px;
+  }
+  .event-card h2 {
+    font-size: 1.2em;
+  }
+  .event-card p {
+    font-size: 0.9em;
+  }
+}
+

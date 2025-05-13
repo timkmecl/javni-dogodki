@@ -162,14 +162,6 @@ function App() {
     return Math.ceil(diffTime / (1000 * 60 * 60 * 24)); // Convert milliseconds to days
   };
 
-  if (loading) {
-    return <div className="App">Nalagam dogodke...</div>;
-  }
-
-  if (error) {
-    return <div className="App">Napaka pri nalaganju dogodkov: {error}</div>;
-  }
-
   return (
     <div className="App">
       <Header />
@@ -184,15 +176,24 @@ function App() {
           dateFilter={dateFilter}
           setDateFilter={setDateFilter}
         />
-        <div className="events-list">
-          {filteredEvents.length > 0 ? (
-            filteredEvents.map((event, index) => (
-              <EventCard key={index} event={event} calculateDaysUntil={calculateDaysUntil} />
-            ))
-          ) : (
-            <p>Ni najdenih dogodkov.</p>
-          )}
-        </div>
+        {loading ? (
+          <div className="loading-container">
+            <div className="loading-spinner"></div>
+            <p>Nalagam dogodke...</p>
+          </div>
+        ) : error ? (
+          <p>Napaka pri nalaganju dogodkov: {error}</p>
+        ) : (
+          <div className="events-list">
+            {filteredEvents.length > 0 ? (
+              filteredEvents.map((event, index) => (
+                <EventCard key={index} event={event} calculateDaysUntil={calculateDaysUntil} />
+              ))
+            ) : (
+              <p>Ni najdenih dogodkov.</p>
+            )}
+          </div>
+        )}
       </main>
     </div>
   );

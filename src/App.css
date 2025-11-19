@@ -167,7 +167,7 @@ select:focus {
 
 .event-card h2 {
   font-size: var(--font-size-xl);
-  margin-bottom: var(--spacing-sm);
+  margin-bottom: var(--spacing-md);
   color: var(--text-main);
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -176,14 +176,30 @@ select:focus {
 }
 
 /* Event Meta Data */
-.event-date-time-status {
+.event-middle-part {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap;
-  gap: var(--spacing-sm);
-  margin-bottom: var(--spacing-md);
-  font-size: var(--font-size-sm);
+  margin-bottom: var(--spacing-xs);
+  gap: var(--spacing-xl);
+  flex: 1;
+}
+
+.event-location-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
   color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+  flex: 1;
+}
+
+.event-datetime-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  text-align: right;
 }
 
 .event-date {
@@ -199,20 +215,23 @@ select:focus {
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: white;
-}
-
-.event-location-info {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-xs);
-  color: var(--text-secondary);
-  margin-bottom: var(--spacing-xs);
-  font-size: var(--font-size-sm);
+  white-space: nowrap;
 }
 
 .event-city-region {
   font-weight: 600;
   color: var(--text-main);
+}
+
+.event-address {
+  color: var(--text-secondary);
+}
+
+.event-time {
+  font-weight: 500;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  font-size: var(--font-size-sm);
 }
 
 .event-location-link {
@@ -225,15 +244,14 @@ select:focus {
 }
 
 .event-organizer {
-  margin-top: var(--spacing-sm);
+  margin-top: 0;
   font-size: var(--font-size-sm);
   color: var(--text-light);
 }
 
 /* Footer & Buttons */
 .event-footer {
-  margin-top: auto;
-  padding-top: var(--spacing-lg);
+  padding-top: var(--spacing-sm);
   display: flex;
   gap: var(--spacing-md);
 }

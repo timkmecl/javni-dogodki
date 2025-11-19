@@ -14,9 +14,10 @@ const EventCard = ({ event, calculateDaysUntil }) => {
   };
 
   const getStatusText = () => {
-    if (daysUntil > 0) return `${daysUntil} dni do dogodka`;
+    if (daysUntil < 0) return `Končano pred ${Math.abs(daysUntil)} dnevi`;
     if (daysUntil === 0) return 'Danes';
-    return `Končano pred ${Math.abs(daysUntil)} dnevi`;
+    if (daysUntil === 1) return 'Jutri';
+    return `Čez ${daysUntil} dni`;
   };
 
   const statusStyle = getStatusStyle();
@@ -25,35 +26,37 @@ const EventCard = ({ event, calculateDaysUntil }) => {
     <div className="event-card">
       <h2>{event.name}</h2>
 
-      <div className="event-date-time-status">
-        <span className="event-date">{event.date}</span>
-        {event.time && event.time !== PLACEHOLDER_VALUE && <span className="event-time"> &bull; {event.time}</span>}
-        <span
-          className="event-status"
-          style={{ backgroundColor: statusStyle.bg, color: statusStyle.text }}
-        >
-          {getStatusText()}
-        </span>
-      </div>
+      <div className="event-middle-part">
+        <div className="event-location-info">
+          <div className="event-city-region">
+            {event.city}
+            {event.region && event.region !== PLACEHOLDER_VALUE && event.region !== event.city && ` (${event.region})`}
+          </div>
+          {event.location && event.location !== PLACEHOLDER_VALUE && event.location !== event.city && (
+            <div className="event-address">{event.location}</div>
+          )}
+          {event.organizer && event.organizer !== PLACEHOLDER_VALUE && (
+            <div className="event-organizer">
+              <small><em>{event.organizer}</em></small>
+            </div>
+          )}
+        </div>
 
-      <div className="event-location-info">
-        <span className="event-city-region">
-          {event.city}
-          {event.region && event.region !== PLACEHOLDER_VALUE && event.region !== event.city && ` (${event.region})`}
-        </span>
-        {event.location && event.location !== PLACEHOLDER_VALUE && event.location !== event.city && (
-          <>
-            {' \u2022 '}
-            <span>{event.location}</span>
-          </>
-        )}
+        <div className="event-datetime-info">
+          <span
+            className="event-status"
+            style={{ backgroundColor: statusStyle.bg, color: statusStyle.text }}
+          >
+            {getStatusText()}
+          </span>
+          <div className="event-date">{event.date}</div>
+          {event.time && event.time !== PLACEHOLDER_VALUE && (
+            <div className="event-time">
+              {event.time}
+            </div>
+          )}
+        </div>
       </div>
-
-      {event.organizer && event.organizer !== PLACEHOLDER_VALUE && (
-        <p className="event-organizer">
-          <small><em>{event.organizer}</em></small>
-        </p>
-      )}
 
       <div className="event-footer">
         <button

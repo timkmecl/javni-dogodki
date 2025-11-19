@@ -1,6 +1,18 @@
-import React from 'react';
+import { memo } from 'react';
+import PropTypes from 'prop-types';
 
-const SearchControls = ({ searchQuery, setSearchQuery, filterBy, setFilterBy, locationFilter, setLocationFilter, dateFilter, setDateFilter, citySuggestions, regionSuggestions }) => {
+const SearchControls = ({
+  searchQuery,
+  setSearchQuery,
+  filterBy,
+  setFilterBy,
+  locationFilter,
+  setLocationFilter,
+  dateFilter,
+  setDateFilter,
+  citySuggestions,
+  regionSuggestions
+}) => {
   const suggestions = filterBy === 'city' ? citySuggestions : filterBy === 'region' ? regionSuggestions : [];
 
   return (
@@ -11,16 +23,18 @@ const SearchControls = ({ searchQuery, setSearchQuery, filterBy, setFilterBy, lo
           placeholder="Išči dogodke..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
+          aria-label="Išči dogodke po imenu, mestu, lokaciji ali organizatorju"
         />
       </div>
       <div className="filter-interface">
-        <div className="filter-group location-type-filter">
+        <div className="filter-group location-type-filter" role="radiogroup" aria-label="Tip filtra lokacije">
           <label>
             <input
               type="radio"
               value="all"
               checked={filterBy === 'all'}
               onChange={() => setFilterBy('all')}
+              aria-label="Prikaži vse dogodke"
             />
             Vse
           </label>
@@ -30,6 +44,7 @@ const SearchControls = ({ searchQuery, setSearchQuery, filterBy, setFilterBy, lo
               value="city"
               checked={filterBy === 'city'}
               onChange={() => setFilterBy('city')}
+              aria-label="Filtriraj po mestu"
             />
             Mesto
           </label>
@@ -39,6 +54,7 @@ const SearchControls = ({ searchQuery, setSearchQuery, filterBy, setFilterBy, lo
               value="region"
               checked={filterBy === 'region'}
               onChange={() => setFilterBy('region')}
+              aria-label="Filtriraj po regiji"
             />
             Regija
           </label>
@@ -51,6 +67,7 @@ const SearchControls = ({ searchQuery, setSearchQuery, filterBy, setFilterBy, lo
           onChange={(e) => setLocationFilter(e.target.value)}
           list="location-suggestions"
           disabled={filterBy === 'all'}
+          aria-label="Vnesi lokacijo za filtriranje"
         />
         <datalist id="location-suggestions">
           {suggestions.map((suggestion, index) => (
@@ -61,6 +78,7 @@ const SearchControls = ({ searchQuery, setSearchQuery, filterBy, setFilterBy, lo
           className="date-filter-select"
           value={dateFilter}
           onChange={(e) => setDateFilter(e.target.value)}
+          aria-label="Izberi časovno obdobje"
         >
           <option value="today">Danes</option>
           <option value="tomorrow">Jutri</option>
@@ -73,4 +91,17 @@ const SearchControls = ({ searchQuery, setSearchQuery, filterBy, setFilterBy, lo
   );
 };
 
-export default SearchControls;
+SearchControls.propTypes = {
+  searchQuery: PropTypes.string.isRequired,
+  setSearchQuery: PropTypes.func.isRequired,
+  filterBy: PropTypes.string.isRequired,
+  setFilterBy: PropTypes.func.isRequired,
+  locationFilter: PropTypes.string.isRequired,
+  setLocationFilter: PropTypes.func.isRequired,
+  dateFilter: PropTypes.string.isRequired,
+  setDateFilter: PropTypes.func.isRequired,
+  citySuggestions: PropTypes.arrayOf(PropTypes.string).isRequired,
+  regionSuggestions: PropTypes.arrayOf(PropTypes.string).isRequired,
+};
+
+export default memo(SearchControls);

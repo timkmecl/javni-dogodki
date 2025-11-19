@@ -1,44 +1,7 @@
 #root {
   max-width: 1280px;
   margin: 0 auto;
-  /* padding: 2rem; */
   text-align: center;
-}
-
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
 }
 
 /* General App Styling */
@@ -194,9 +157,10 @@
 }
 
 .event-status {
-  font-size: 0.85em;
-  font-weight: bold;
-  padding: 3px 8px;
+  margin-left: 10px;
+  font-size: 0.9em;
+  font-weight: 500;
+  padding: 2px 6px;
   border-radius: 4px;
   color: white;
   /* Background color is set inline based on daysUntil */
@@ -243,23 +207,61 @@
   padding-top: 10px; /* Adds some space above the footer links */
   border-top: 1px solid #eee; /* Optional: adds a separator line */
   display: flex;
-  justify-content: flex-end; /* Aligns link to the right */
+  justify-content: flex-end; /* Aligns buttons to the right */
+  gap: 10px;
 }
 
-.details-link {
-  display: inline-block;
-  padding: 8px 15px;
-  background-color: #007bff;
-  color: white !important;
+/* Button Styles */
+.google-search-button,
+.details-button {
+  padding: 10px 15px;
+  font-size: 1em;
+  font-weight: bold;
+  cursor: pointer;
+  border: none;
   border-radius: 5px;
-  font-size: 0.9em;
-  text-align: center;
-  transition: background-color 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.details-link:hover {
+.google-search-button {
+  background-color: #007BFF;
+  color: white;
+}
+
+.google-search-button:hover {
   background-color: #0056b3;
-  text-decoration: none;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
+}
+
+.google-search-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.details-button {
+  padding: 10px 15px;
+  font-size: 0.9em;
+  background-color: #6c757d;
+  color: white;
+}
+
+.details-button:hover {
+  background-color: #5a6268;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
+}
+
+.details-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.google-search-button:focus,
+.details-button:focus {
+  outline: 2px solid #007bff;
+  outline-offset: 2px;
 }
 
 .event-card p {

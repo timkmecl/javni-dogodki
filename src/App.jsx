@@ -1,18 +1,28 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { load as cheerioLoad } from 'cheerio';
 import './App.css';
 import Header from './components/Header';
 import SearchControls from './components/SearchControls';
 import EventCard from './components/EventCard';
+import { calculateDaysUntil, matchesDateFilter } from './utils/dateUtils';
+import {
+  API_URL,
+  BASE_URL,
+  DEFAULT_FILTER_BY,
+  DEFAULT_DATE_FILTER,
+  DEFAULT_LOCATION_FILTER,
+  DEFAULT_SEARCH_QUERY,
+  PLACEHOLDER_VALUE,
+} from './constants';
 
 function App() {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [filterBy, setFilterBy] = useState('all'); // New state for filter option
-  const [locationFilter, setLocationFilter] = useState(''); // New state for location filter
-  const [dateFilter, setDateFilter] = useState('thisweek'); // New state for date filter
+  const [searchQuery, setSearchQuery] = useState(DEFAULT_SEARCH_QUERY);
+  const [filterBy, setFilterBy] = useState(DEFAULT_FILTER_BY);
+  const [locationFilter, setLocationFilter] = useState(DEFAULT_LOCATION_FILTER);
+  const [dateFilter, setDateFilter] = useState(DEFAULT_DATE_FILTER);
 
   useEffect(() => {
     const fetchAllEvents = async () => {
@@ -20,9 +30,7 @@ function App() {
       setError(null);
 
       try {
-        const response = await fetch(
-          `https://e-uprava.gov.si/si/aktualno/prireditve-in-shodi/content/singleton.html?lang=si&type=-&perioda=-&posta=-1&offset=0&sentinel_type=ok&sentinel_status=ok&is_ajax=1&complete=true&page=30`
-        );
+        const response = await fetch(API_URL);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -44,33 +52,33 @@ function App() {
           .map((_, eventDiv) => {
             const $eventDiv = $(eventDiv);
 
-            const date = $eventDiv.find('.calendarBox').attr('title') || 'N/A';
+            const date = $eventDiv.find('.calendarBox').attr('title') || PLACEHOLDER_VALUE;
 
             const upperOpomnikDiv = $eventDiv.find('.upperOpomnikDiv');
-            const cityRaw = upperOpomnikDiv.find('span').eq(0).text().trim() || 'N/A';
-            let region = 'N/A';
+            const cityRaw = upperOpomnikDiv.find('span').eq(0).text().trim() || PLACEHOLDER_VALUE;
+            let region = PLACEHOLDER_VALUE;
             let city = cityRaw;
             if (cityRaw.includes('-')) {
               [region, city] = cityRaw.split('-').map((part) => part.trim());
             } else if (city.endsWith(',')) {
               city = city.slice(0, -1).trim();
             }
-            
-            const locationRaw = upperOpomnikDiv.find('span').eq(1).text() || 'N/A';
+
+            const locationRaw = upperOpomnikDiv.find('span').eq(1).text() || PLACEHOLDER_VALUE;
             // if location starts with , remove it and trim
             const location = locationRaw.startsWith(',')
               ? locationRaw.slice(1).trim()
               : locationRaw.trim();
 
-            const time = upperOpomnikDiv.next('div').contents().not('div').text().trim() || 'N/A';
+            const time = upperOpomnikDiv.next('div').contents().not('div').text().trim() || PLACEHOLDER_VALUE;
 
             const linkElement = $eventDiv.find('a');
             const url = linkElement.attr('href') || '#';
-            const name = linkElement.text() || 'N/A';
+            const name = linkElement.text() || PLACEHOLDER_VALUE;
 
             const lessImportantDiv = $eventDiv.find('.contentOpomnik > .lessImportant');
             let extraInfo = lessImportantDiv.text().trim() || '';
-            let organizer = 'N/A';
+            let organizer = PLACEHOLDER_VALUE;
             if (extraInfo.includes('organizator:')) {
               organizer = extraInfo.split('organizator:')[1].trim();
               extraInfo = extraInfo.split('organizator:')[0].trim();
@@ -97,73 +105,44 @@ function App() {
     fetchAllEvents();
   }, []);
 
-  const filteredEvents = events.filter((event) => {
-    const searchLower = searchQuery.toLowerCase();
-    const locationFilterLower = locationFilter.toLowerCase();
+  // Memoize filtered events to avoid recalculating on every render
+  const filteredEvents = useMemo(() => {
+    return events.filter((event) => {
+      const searchLower = searchQuery.toLowerCase();
+      const locationFilterLower = locationFilter.toLowerCase();
 
-    const matchesSearch =
-      event.name.toLowerCase().includes(searchLower) ||
-      event.city.toLowerCase().includes(searchLower) ||
-      event.location.toLowerCase().includes(searchLower) ||
-      event.organizer.toLowerCase().includes(searchLower);
+      const matchesSearch =
+        event.name.toLowerCase().includes(searchLower) ||
+        event.city.toLowerCase().includes(searchLower) ||
+        event.location.toLowerCase().includes(searchLower) ||
+        event.organizer.toLowerCase().includes(searchLower);
 
-    const matchesLocationFilter =
-      filterBy === 'city'
-        ? event.city.toLowerCase().includes(locationFilterLower)
-        : filterBy === 'region'
-        ? (event.region !== 'N/A' ? event.region : event.city).toLowerCase().includes(locationFilterLower)
-        : true;
+      const matchesLocationFilter =
+        filterBy === 'city'
+          ? event.city.toLowerCase().includes(locationFilterLower)
+          : filterBy === 'region'
+            ? (event.region !== PLACEHOLDER_VALUE ? event.region : event.city).toLowerCase().includes(locationFilterLower)
+            : true;
 
-    const matchesDateFilter = (() => {
-      const [day, month, year] = event.date.split('.').map(Number);
-      const eventDate = new Date(year, month - 1, day);
-      const today = new Date();
+      const matchesDate = matchesDateFilter(event.date, dateFilter);
 
-      switch (dateFilter) {
-        case 'today':
-          return (
-            eventDate.getDate() === today.getDate() &&
-            eventDate.getMonth() === today.getMonth() &&
-            eventDate.getFullYear() === today.getFullYear()
-          );
-        case 'tomorrow':
-          const tomorrow = new Date(today);
-          tomorrow.setDate(today.getDate() + 1);
-          return (
-            eventDate.getDate() === tomorrow.getDate() &&
-            eventDate.getMonth() === tomorrow.getMonth() &&
-            eventDate.getFullYear() === tomorrow.getFullYear()
-          );
-        case 'thisweek':
-          const startOfWeek = new Date(today);
-          startOfWeek.setDate(today.getDate() - today.getDay());
-          const endOfWeek = new Date(startOfWeek);
-          endOfWeek.setDate(startOfWeek.getDate() + 6);
-          return eventDate >= startOfWeek && eventDate <= endOfWeek;
-        case 'thismonth':
-          return (
-            eventDate.getMonth() === today.getMonth() &&
-            eventDate.getFullYear() === today.getFullYear()
-          );
-        case 'all':
-        default:
-          return true;
-      }
-    })();
+      return matchesSearch && matchesLocationFilter && matchesDate;
+    });
+  }, [events, searchQuery, locationFilter, filterBy, dateFilter]);
 
-    return matchesSearch && matchesLocationFilter && matchesDateFilter;
-  });
+  // Memoize calculateDaysUntil callback
+  const calculateDaysUntilCallback = useCallback((eventDate) => {
+    return calculateDaysUntil(eventDate);
+  }, []);
 
-  const calculateDaysUntil = (eventDate) => {
-    const [day, month, year] = eventDate.split('.').map(Number);
-    const eventDateObj = new Date(year, month - 1, day);
-    const today = new Date();
-    const diffTime = eventDateObj - today;
-    return Math.ceil(diffTime / (1000 * 60 * 60 * 24)); // Convert milliseconds to days
-  };
+  // Memoize unique cities and regions to avoid recalculating on every render
+  const uniqueCities = useMemo(() => {
+    return [...new Set(events.map((event) => event.city.toUpperCase()).filter((city) => city !== PLACEHOLDER_VALUE))];
+  }, [events]);
 
-  const uniqueCities = [...new Set(events.map((event) => event.city.toUpperCase()).filter((city) => city !== 'N/A'))];
-  const uniqueRegions = [...new Set(events.map((event) => event.region.toUpperCase()).filter((region) => region !== 'N/A'))];
+  const uniqueRegions = useMemo(() => {
+    return [...new Set(events.map((event) => event.region.toUpperCase()).filter((region) => region !== PLACEHOLDER_VALUE))];
+  }, [events]);
 
   return (
     <div className="App">
@@ -191,8 +170,12 @@ function App() {
         ) : (
           <div className="events-list">
             {filteredEvents.length > 0 ? (
-              filteredEvents.map((event, index) => (
-                <EventCard key={index} event={event} calculateDaysUntil={calculateDaysUntil} />
+              filteredEvents.map((event) => (
+                <EventCard
+                  key={`${event.url}-${event.date}`}
+                  event={event}
+                  calculateDaysUntil={calculateDaysUntilCallback}
+                />
               ))
             ) : (
               <p>Ni najdenih dogodkov.</p>

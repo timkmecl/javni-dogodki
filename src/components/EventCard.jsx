@@ -1,7 +1,21 @@
-import React from 'react';
+import { memo } from 'react';
+import PropTypes from 'prop-types';
+import { STATUS_COLORS, PLACEHOLDER_VALUE, BASE_URL } from '../constants';
 
 const EventCard = ({ event, calculateDaysUntil }) => {
   const daysUntil = calculateDaysUntil(event.date);
+
+  const getStatusColor = () => {
+    if (daysUntil < 0) return STATUS_COLORS.PAST;
+    if (daysUntil === 0) return STATUS_COLORS.TODAY;
+    return STATUS_COLORS.FUTURE;
+  };
+
+  const getStatusText = () => {
+    if (daysUntil > 0) return `${daysUntil} dni do dogodka`;
+    if (daysUntil === 0) return 'Danes';
+    return `Končano pred ${Math.abs(daysUntil)} dnevi`;
+  };
 
   return (
     <div className="event-card">
@@ -9,26 +23,21 @@ const EventCard = ({ event, calculateDaysUntil }) => {
 
       <div className="event-date-time-status">
         <span className="event-date">{event.date}</span>
-        {event.time && event.time !== 'N/A' && <span className="event-time"> &bull; {event.time}</span>}
-        <span className="event-status" style={{
-          marginLeft: '10px',
-          fontSize: '0.9em',
-          fontWeight: '500',
-          padding: '2px 6px',
-          borderRadius: '4px',
-          color: 'white',
-          backgroundColor: daysUntil < 0 ? '#e74c3c' : (daysUntil === 0 ? '#2ecc71' : '#f39c12')
-        }}>
-          {daysUntil > 0 ? `${daysUntil} dni do dogodka` : daysUntil === 0 ? 'Danes' : `Končano pred ${Math.abs(daysUntil)} dnevi`}
+        {event.time && event.time !== PLACEHOLDER_VALUE && <span className="event-time"> &bull; {event.time}</span>}
+        <span
+          className="event-status"
+          style={{ backgroundColor: getStatusColor() }}
+        >
+          {getStatusText()}
         </span>
       </div>
 
       <div className="event-location-info">
         <span className="event-city-region">
           {event.city}
-          {event.region && event.region !== 'N/A' && event.region !== event.city && ` (${event.region})`}
+          {event.region && event.region !== PLACEHOLDER_VALUE && event.region !== event.city && ` (${event.region})`}
         </span>
-        {event.location && event.location !== 'N/A' && event.location !== event.city && (
+        {event.location && event.location !== PLACEHOLDER_VALUE && event.location !== event.city && (
           <>
             {' \u2022 '}
             <a href={event.googleMapsLink} target="_blank" rel="noopener noreferrer" className="event-location-link">
@@ -38,7 +47,7 @@ const EventCard = ({ event, calculateDaysUntil }) => {
         )}
       </div>
 
-      {event.organizer && event.organizer !== 'N/A' && (
+      {event.organizer && event.organizer !== PLACEHOLDER_VALUE && (
         <p className="event-organizer">
           <small><em>{event.organizer}</em></small>
         </p>
@@ -51,32 +60,17 @@ const EventCard = ({ event, calculateDaysUntil }) => {
             window.open(`https://www.google.com/search?q=${query}`, '_blank');
           }}
           className="google-search-button"
-          style={{
-            marginRight: '10px',
-            padding: '10px 15px',
-            fontSize: '1em',
-            fontWeight: 'bold',
-            cursor: 'pointer',
-            backgroundColor: '#007BFF',
-            color: 'white',
-            border: 'none',
-            borderRadius: '5px',
-            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-          }}
+          aria-label="Išči dogodek na Google"
         >
           Išči
         </button>
 
         <button
           onClick={() => {
-            window.open(`https://e-uprava.gov.si/${event.url}`, '_blank');
+            window.open(`${BASE_URL}/${event.url}`, '_blank');
           }}
           className="details-button"
-          style={{
-            padding: '5px 10px',
-            fontSize: '0.9em',
-            cursor: 'pointer',
-          }}
+          aria-label="Več podrobnosti o dogodku"
         >
           Več podrobnosti
         </button>
@@ -85,4 +79,19 @@ const EventCard = ({ event, calculateDaysUntil }) => {
   );
 };
 
-export default EventCard;
+EventCard.propTypes = {
+  event: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    date: PropTypes.string.isRequired,
+    time: PropTypes.string,
+    city: PropTypes.string.isRequired,
+    region: PropTypes.string,
+    location: PropTypes.string,
+    organizer: PropTypes.string,
+    url: PropTypes.string.isRequired,
+    googleMapsLink: PropTypes.string.isRequired,
+  }).isRequired,
+  calculateDaysUntil: PropTypes.func.isRequired,
+};
+
+export default memo(EventCard);

@@ -5,9 +5,11 @@ import { STATUS_COLORS, PLACEHOLDER_VALUE, BASE_URL } from '../constants';
 const EventCard = ({ event, calculateDaysUntil }) => {
   const daysUntil = calculateDaysUntil(event.date);
 
-  const getStatusColor = () => {
+  const getStatusStyle = () => {
     if (daysUntil < 0) return STATUS_COLORS.PAST;
     if (daysUntil === 0) return STATUS_COLORS.TODAY;
+    if (daysUntil === 1) return STATUS_COLORS.TOMORROW;
+    if (daysUntil <= 7) return STATUS_COLORS.THIS_WEEK;
     return STATUS_COLORS.FUTURE;
   };
 
@@ -16,6 +18,8 @@ const EventCard = ({ event, calculateDaysUntil }) => {
     if (daysUntil === 0) return 'Danes';
     return `Končano pred ${Math.abs(daysUntil)} dnevi`;
   };
+
+  const statusStyle = getStatusStyle();
 
   return (
     <div className="event-card">
@@ -26,7 +30,7 @@ const EventCard = ({ event, calculateDaysUntil }) => {
         {event.time && event.time !== PLACEHOLDER_VALUE && <span className="event-time"> &bull; {event.time}</span>}
         <span
           className="event-status"
-          style={{ backgroundColor: getStatusColor() }}
+          style={{ backgroundColor: statusStyle.bg, color: statusStyle.text }}
         >
           {getStatusText()}
         </span>
@@ -40,9 +44,7 @@ const EventCard = ({ event, calculateDaysUntil }) => {
         {event.location && event.location !== PLACEHOLDER_VALUE && event.location !== event.city && (
           <>
             {' \u2022 '}
-            <a href={event.googleMapsLink} target="_blank" rel="noopener noreferrer" className="event-location-link">
-              {event.location}
-            </a>
+            <span>{event.location}</span>
           </>
         )}
       </div>
@@ -67,12 +69,22 @@ const EventCard = ({ event, calculateDaysUntil }) => {
 
         <button
           onClick={() => {
+            window.open(event.googleMapsLink, '_blank');
+          }}
+          className="map-button"
+          aria-label="Odpri lokacijo na zemljevidu"
+        >
+          Zemljevid
+        </button>
+
+        <button
+          onClick={() => {
             window.open(`${BASE_URL}/${event.url}`, '_blank');
           }}
           className="details-button"
           aria-label="Več podrobnosti o dogodku"
         >
-          Več podrobnosti
+          Več
         </button>
       </div>
     </div>

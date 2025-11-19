@@ -60,7 +60,7 @@ const SearchControls = ({
           </label>
         </div>
         <input
-          className="location-filter-input"
+          className={`location-filter-input ${filterBy === 'all' ? 'hidden' : ''}`}
           type="text"
           placeholder="Filtriraj po lokaciji..."
           value={locationFilter}

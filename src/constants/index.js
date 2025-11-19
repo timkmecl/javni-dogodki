@@ -28,11 +28,12 @@ export const DEFAULT_DATE_FILTER = DATE_FILTERS.THIS_WEEK;
 export const DEFAULT_LOCATION_FILTER = '';
 export const DEFAULT_SEARCH_QUERY = '';
 
-// Event Status Colors
 export const STATUS_COLORS = {
-    PAST: '#e74c3c',
-    TODAY: '#2ecc71',
-    FUTURE: '#f39c12',
+    PAST: { bg: '#9ca3af', text: '#ffffff' },
+    TODAY: { bg: '#e11d48', text: '#ffffff' }, // Rose 600
+    TOMORROW: { bg: '#ffe4e6', text: '#e11d48' }, // Rose 100 bg, Rose 600 text
+    THIS_WEEK: { bg: '#e0e7ff', text: '#4338ca' }, // Indigo 100/700
+    FUTURE: { bg: '#f1f5f9', text: '#475569' }, // Slate 100/600
 };
 
 // Placeholder Values

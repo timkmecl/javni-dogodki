@@ -1,5 +1,6 @@
 import { memo } from 'react';
 import PropTypes from 'prop-types';
+import { SearchIcon, MapPinIcon, CalendarIcon } from './Icons';
 
 const SearchControls = ({
   searchQuery,
@@ -18,13 +19,16 @@ const SearchControls = ({
   return (
     <div className="controls-container">
       <div className="search-interface">
-        <input
-          type="text"
-          placeholder="Išči dogodke..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          aria-label="Išči dogodke po imenu, mestu, lokaciji ali organizatorju"
-        />
+        <div className="input-with-icon">
+          <SearchIcon className="input-icon" size={20} />
+          <input
+            type="text"
+            placeholder="Išči dogodke..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            aria-label="Išči dogodke po imenu, mestu, lokaciji ali organizatorju"
+          />
+        </div>
       </div>
       <div className="filter-interface">
         <div className="filter-group location-type-filter" role="radiogroup" aria-label="Tip filtra lokacije">
@@ -59,33 +63,41 @@ const SearchControls = ({
             Regija
           </label>
         </div>
-        <input
-          className={`location-filter-input ${filterBy === 'all' ? 'hidden' : ''}`}
-          type="text"
-          placeholder="Filtriraj po lokaciji..."
-          value={locationFilter}
-          onChange={(e) => setLocationFilter(e.target.value)}
-          list="location-suggestions"
-          disabled={filterBy === 'all'}
-          aria-label="Vnesi lokacijo za filtriranje"
-        />
+
+        <div className={`input-with-icon ${filterBy === 'all' ? 'hidden' : ''}`}>
+          <MapPinIcon className="input-icon" size={18} />
+          <input
+            className="location-filter-input"
+            type="text"
+            placeholder="Filtriraj po lokaciji..."
+            value={locationFilter}
+            onChange={(e) => setLocationFilter(e.target.value)}
+            list="location-suggestions"
+            disabled={filterBy === 'all'}
+            aria-label="Vnesi lokacijo za filtriranje"
+          />
+        </div>
         <datalist id="location-suggestions">
           {suggestions.map((suggestion, index) => (
             <option key={index} value={suggestion} />
           ))}
         </datalist>
-        <select
-          className="date-filter-select"
-          value={dateFilter}
-          onChange={(e) => setDateFilter(e.target.value)}
-          aria-label="Izberi časovno obdobje"
-        >
-          <option value="today">Danes</option>
-          <option value="tomorrow">Jutri</option>
-          <option value="thisweek">Ta teden</option>
-          <option value="thismonth">Ta mesec</option>
-          <option value="all">Vsi datumi</option>
-        </select>
+
+        <div className="select-with-icon">
+          <CalendarIcon className="input-icon" size={18} />
+          <select
+            className="date-filter-select"
+            value={dateFilter}
+            onChange={(e) => setDateFilter(e.target.value)}
+            aria-label="Izberi časovno obdobje"
+          >
+            <option value="today">Danes</option>
+            <option value="tomorrow">Jutri</option>
+            <option value="thisweek">Ta teden</option>
+            <option value="thismonth">Ta mesec</option>
+            <option value="all">Vsi datumi</option>
+          </select>
+        </div>
       </div>
     </div>
   );

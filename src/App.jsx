@@ -4,6 +4,7 @@ import './App.css';
 import Header from './components/Header';
 import SearchControls from './components/SearchControls';
 import EventCard from './components/EventCard';
+import { SearchIcon } from './components/Icons';
 import { calculateDaysUntil, matchesDateFilter } from './utils/dateUtils';
 import {
   API_URL,
@@ -70,7 +71,8 @@ function App() {
               ? locationRaw.slice(1).trim()
               : locationRaw.trim();
 
-            const time = upperOpomnikDiv.next('div').contents().not('div').text().trim() || PLACEHOLDER_VALUE;
+            const timeRaw = upperOpomnikDiv.next('div').contents().not('div').text().trim() || PLACEHOLDER_VALUE;
+            const time = timeRaw.replace(/^ob\s+/i, '');
 
             const linkElement = $eventDiv.find('a');
             const url = linkElement.attr('href') || '#';
@@ -166,7 +168,7 @@ function App() {
             <p>Nalagam dogodke...</p>
           </div>
         ) : error ? (
-          <p>Napaka pri nalaganju dogodkov: {error}</p>
+          <p className="error-message">Napaka pri nalaganju dogodkov: {error}</p>
         ) : (
           <div className="events-list">
             {filteredEvents.length > 0 ? (
@@ -178,7 +180,10 @@ function App() {
                 />
               ))
             ) : (
-              <p>Ni najdenih dogodkov.</p>
+              <div className="no-events-message">
+                <SearchIcon size={48} className="no-events-icon" />
+                <p>Ni najdenih dogodkov.</p>
+              </div>
             )}
           </div>
         )}

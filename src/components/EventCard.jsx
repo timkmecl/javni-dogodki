@@ -1,6 +1,14 @@
 import { memo } from 'react';
 import PropTypes from 'prop-types';
 import { STATUS_COLORS, PLACEHOLDER_VALUE, BASE_URL } from '../constants';
+import {
+  MapPinIcon,
+  ClockIcon,
+  CalendarIcon,
+  SearchIcon,
+  ExternalLinkIcon,
+  GoogleIcon
+} from './Icons';
 
 const EventCard = ({ event, calculateDaysUntil }) => {
   const daysUntil = calculateDaysUntil(event.date);
@@ -29,8 +37,10 @@ const EventCard = ({ event, calculateDaysUntil }) => {
       <div className="event-middle-part">
         <div className="event-location-info">
           <div className="event-city-region">
-            {event.city}
-            {event.region && event.region !== PLACEHOLDER_VALUE && event.region !== event.city && ` (${event.region})`}
+            <span>
+              {event.city}
+              {event.region && event.region !== PLACEHOLDER_VALUE && event.region !== event.city && ` (${event.region})`}
+            </span>
           </div>
           {event.location && event.location !== PLACEHOLDER_VALUE && event.location !== event.city && (
             <div className="event-address">{event.location}</div>
@@ -49,9 +59,13 @@ const EventCard = ({ event, calculateDaysUntil }) => {
           >
             {getStatusText()}
           </span>
-          <div className="event-date">{event.date}</div>
+          <div className="event-date">
+            <CalendarIcon size={18} className="info-icon" />
+            {event.date}
+          </div>
           {event.time && event.time !== PLACEHOLDER_VALUE && (
             <div className="event-time">
+              <ClockIcon size={18} className="info-icon" />
               {event.time}
             </div>
           )}
@@ -67,7 +81,8 @@ const EventCard = ({ event, calculateDaysUntil }) => {
           className="google-search-button"
           aria-label="Išči dogodek na Google"
         >
-          Išči
+          <SearchIcon size={16} />
+          <span>Išči</span>
         </button>
 
         <button
@@ -77,7 +92,8 @@ const EventCard = ({ event, calculateDaysUntil }) => {
           className="map-button"
           aria-label="Odpri lokacijo na zemljevidu"
         >
-          Zemljevid
+          <MapPinIcon size={16} />
+          <span>Zemljevid</span>
         </button>
 
         <button
@@ -87,7 +103,8 @@ const EventCard = ({ event, calculateDaysUntil }) => {
           className="details-button"
           aria-label="Več podrobnosti o dogodku"
         >
-          Več
+          <span>Več</span>
+          <ExternalLinkIcon size={16} />
         </button>
       </div>
     </div>

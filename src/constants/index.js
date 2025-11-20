@@ -31,7 +31,7 @@ export const DEFAULT_SEARCH_QUERY = '';
 export const STATUS_COLORS = {
     PAST: { bg: '#9ca3af', text: '#ffffff' },
     TODAY: { bg: '#e11d48', text: '#ffffff' }, // Rose 600
-    TOMORROW: { bg: '#ffe4e6', text: '#e11d48' }, // Rose 100 bg, Rose 600 text
+    TOMORROW: { bg: '#f97316', text: '#ffffff' }, // Orange 500
     THIS_WEEK: { bg: '#e0e7ff', text: '#4338ca' }, // Indigo 100/700
     FUTURE: { bg: '#f1f5f9', text: '#475569' }, // Slate 100/600
 };

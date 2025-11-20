@@ -1,6 +1,7 @@
 import { memo } from 'react';
 import PropTypes from 'prop-types';
 import { STATUS_COLORS, PLACEHOLDER_VALUE, BASE_URL } from '../constants';
+import { parseEventDate, getEndOfWeek } from '../utils/dateUtils';
 import {
   MapPinIcon,
   ClockIcon,
@@ -17,7 +18,12 @@ const EventCard = ({ event, calculateDaysUntil }) => {
     if (daysUntil < 0) return STATUS_COLORS.PAST;
     if (daysUntil === 0) return STATUS_COLORS.TODAY;
     if (daysUntil === 1) return STATUS_COLORS.TOMORROW;
-    if (daysUntil <= 7) return STATUS_COLORS.THIS_WEEK;
+
+    const eventDateObj = parseEventDate(event.date);
+    const today = new Date();
+    const endOfWeek = getEndOfWeek(today);
+
+    if (eventDateObj <= endOfWeek) return STATUS_COLORS.THIS_WEEK;
     return STATUS_COLORS.FUTURE;
   };
 
@@ -25,6 +31,7 @@ const EventCard = ({ event, calculateDaysUntil }) => {
     if (daysUntil < 0) return `Končano pred ${Math.abs(daysUntil)} dnevi`;
     if (daysUntil === 0) return 'Danes';
     if (daysUntil === 1) return 'Jutri';
+    if (daysUntil === 2) return `Čez ${daysUntil} dneva`;
     return `Čez ${daysUntil} dni`;
   };
 

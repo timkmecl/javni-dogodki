@@ -60,15 +60,59 @@
   padding: var(--spacing-xl);
 }
 
-/* Controls Container */
+/* Search Controls Wrapper */
+.search-controls-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-lg);
+}
+
 .controls-container {
   background: var(--bg-card);
   border-radius: var(--border-radius-xl);
   padding: var(--spacing-xl);
   box-shadow: var(--shadow-lg);
-  margin-bottom: var(--spacing-2xl);
   border: 1px solid rgba(0, 0, 0, 0.05);
+  margin-bottom: 0;
+  /* Removed margin-bottom as it's handled by wrapper */
 }
+
+/* Action Buttons Outside */
+.action-buttons-outside {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--spacing-md);
+  padding-right: var(--spacing-sm);
+}
+
+.action-button-small {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: var(--border-radius-full);
+  font-weight: 500;
+  font-size: 0.75rem;
+  transition: var(--transition-base);
+  border: 1px solid transparent;
+  cursor: pointer;
+  white-space: nowrap;
+  background-color: transparent;
+  color: var(--text-light);
+}
+
+.action-button-small:hover {
+  background-color: #f1f5f9;
+  color: var(--text-secondary);
+  border-color: #e2e8f0;
+}
+
+.action-button-small:active {
+  transform: translateY(1px);
+  background-color: #e2e8f0;
+}
+
 
 /* Search and Filter Interfaces */
 .search-interface,
@@ -185,6 +229,9 @@ select:focus {
   flex: 1;
   min-width: 150px;
 }
+
+
+
 
 /* Events List Grid */
 .events-list {
